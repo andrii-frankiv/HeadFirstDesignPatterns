@@ -1,9 +1,7 @@
 var WeatherData = (function () {
     function WeatherData() {
-    }
-    WeatherData.prototype.WeatherData = function () {
         this.observers = [];
-    };
+    }
     WeatherData.prototype.registerObserver = function (o) {
         this.observers.push(o);
     };
@@ -30,8 +28,31 @@ var WeatherData = (function () {
     return WeatherData;
 })();
 var CurrentConditionDisplay = (function () {
-    function CurrentConditionDisplay() {
+    function CurrentConditionDisplay(weatherData) {
+        this.weatherData = weatherData;
+        weatherData.registerObserver(this);
     }
+    CurrentConditionDisplay.prototype.update = function (temp, humidity, pressure) {
+        this.temperature = temp;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.display();
+    };
+    CurrentConditionDisplay.prototype.display = function () {
+        console.log("Current conditions:" + " C " + this.temperature + " |" + " % " + this.humidity + " | " + "Pa " + this.pressure);
+    };
     return CurrentConditionDisplay;
 })();
+var WeatherStation = (function () {
+    function WeatherStation() {
+    }
+    WeatherStation.init = function () {
+        WeatherStation.weatherData = new WeatherData();
+        WeatherStation.currentConditionDisplay = new CurrentConditionDisplay(WeatherStation.weatherData);
+        WeatherStation.weatherData.setMeasurments(20, 12, 3);
+        WeatherStation.weatherData.setMeasurments(12, 22, 13);
+    };
+    return WeatherStation;
+})();
+WeatherStation.init();
 //# sourceMappingURL=observator.js.map

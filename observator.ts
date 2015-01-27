@@ -22,7 +22,7 @@ class WeatherData implements Subject {
     private humidity: number;
     private pressure: number;
 
-    WeatherData() {
+    constructor() {
         this.observers = [];
     }
 
@@ -43,7 +43,7 @@ class WeatherData implements Subject {
         }
     }
 
-    public measurementsChanged() : void {
+    measurementsChanged() : void {
         this.notifyObservers();
     }
 
@@ -59,7 +59,35 @@ class CurrentConditionDisplay implements Observer, DisplayElement {
     private temperature: number;
     private humidity: number;
     private pressure: number;
+    private weatherData: Subject;
 
-    //constructor(data: Subject)
+    constructor(weatherData: Subject) {
+        this.weatherData = weatherData;
+        weatherData.registerObserver(this);
+    }
 
+    update(temp: number, humidity: number, pressure: number) {
+        this.temperature = temp;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.display();
+    }
+
+    display() {
+        console.log("Current conditions:" + " C "+ this.temperature + " |" + " % " + this.humidity + " | " + "Pa " + this.pressure);
+    }
 }
+
+class WeatherStation {
+    static weatherData: WeatherData;
+    static currentConditionDisplay: CurrentConditionDisplay;
+    static init(): void {
+        WeatherStation.weatherData = new WeatherData();
+        WeatherStation.currentConditionDisplay = new CurrentConditionDisplay(WeatherStation.weatherData);
+        WeatherStation.weatherData.setMeasurments(20,12, 3);
+        WeatherStation.weatherData.setMeasurments(12,22, 13);
+
+    }
+}
+
+WeatherStation.init();
