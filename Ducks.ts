@@ -1,5 +1,5 @@
 /**
- * STRUCTURE PATTERN
+ * STRUCTURE PATTERN - Strategy
  * Created by user on 27.01.15.
  */
 interface FlyBehavior {
